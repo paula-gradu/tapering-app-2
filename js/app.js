@@ -137,7 +137,10 @@ const actions = {
   submitCraving: s => {
     // during the holding fortnight there is nothing to set: record and move on
     if (s.data.holdingDay > 0) return commit(s);
-    if (s.ui.draft > s.data.tolerable && s.ui.raisedFloor === null) {
+    // smoked fewer than the number: straight to tomorrow, no extra questions
+    if (derive(s).smokedLess) {
+      s.ui.sheet = 'result';
+    } else if (s.ui.draft > s.data.tolerable && s.ui.raisedFloor === null) {
       s.ui.sheet = 'hardDay';
       s.ui.fromOverCard = false;
       s.ui.floorDraft = Math.min(10, s.ui.draft);
@@ -262,7 +265,7 @@ function commit(s) {
     smoked: v.taken,
     floor: v.floorNow,
     raised: v.floorNow > s.data.tolerable,
-    note: v.taken !== day.dose || s.ui.draft > v.floorNow ? s.ui.note : ''
+    note: !v.smokedLess && (v.taken > day.dose || s.ui.draft > v.floorNow) ? s.ui.note : ''
   });
   s.data.days = s.data.days.slice(0, -1).concat([done, newDay(day.n + 1, next)]);
   s.data.outbox = s.data.outbox.concat([{

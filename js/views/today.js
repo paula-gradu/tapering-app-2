@@ -120,9 +120,21 @@ function overCard(v) {
     </div>`;
 }
 
-// Only shown when the tally differs from the day's number, in either direction.
+// Only shown when the tally differs from the day's number. Fewer than the
+// number is just a quick check; more gets the stepper to correct the count.
 function countCard(v) {
   const { str, T, day, taken, smoked } = v;
+  if (smoked < day.dose) {
+    return html`
+      <div class="card card--alert g16" data-key="count-less">
+        <div class="stack g5">
+          <span class="card-title">${T('countLessTitle', { n: taken })}</span>
+          <span class="body-sm c-muted">${T('countLessBody', { n: taken, dose: day.dose })}</span>
+        </div>
+        <button type="button" class="btn btn--primary btn--md" data-action="confirmCount">${T('countConfirm', { n: taken })}</button>
+        <button type="button" class="btn btn--outline" data-action="confirmPrescribed">${T('countConfirmAlt', { dose: day.dose })}</button>
+      </div>`;
+  }
   return html`
     <div class="card card--alert g16" data-key="count">
       <div class="stack g5">
@@ -142,11 +154,12 @@ function countCard(v) {
 }
 
 function cravingCard(v) {
-  const { str, T, ctx, ui, holding, day, taken, floorNow } = v;
+  const { str, T, ctx, ui, holding, day, taken, floorNow, smokedLess } = v;
   const over = ui.draft > floorNow;
-  // an unusual day: the confirmed count differed, or the craving came in over
-  // the level he can live with. Saying "no, I smoked the number" is ordinary.
-  const unusual = taken !== day.dose || over;
+  // an unusual day: he smoked more than the number, or the craving came in
+  // over the level he can live with. Smoking fewer is not unusual, and
+  // saying "no, I smoked the number" is ordinary.
+  const unusual = !smokedLess && (taken > day.dose || over);
   return html`
     <div class="card g18" data-key="craving">
       <div class="stack g5">

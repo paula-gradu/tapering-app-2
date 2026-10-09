@@ -141,6 +141,9 @@ export const STRINGS = {
     countConfirmAlt: c => 'No, I smoked ' + c.dose,
     noteWhy: 'Today did not go to plan. Worth a line about why, while you remember.',
     countHint: c => c.n === 1 ? 'You counted 1 as you went' : 'You counted ' + c.n + ' as you went',
+    // Added for the smoked-fewer check; not part of the originally approved copy.
+    countLessTitle: c => 'Just ' + c.n + ' today?',
+    countLessBody: c => 'Are you sure you smoked just ' + c.n + ', rather than ' + c.dose + '?',
     mathTomorrow: c => 'Tomorrow, capped at ' + c.start,
     accept: c => c.next === 0 ? 'That\u2019s my last one' : 'Set ' + c.next + ' for tomorrow',
 
@@ -322,6 +325,9 @@ export const STRINGS = {
     countConfirmAlt: c => 'Nu, am fumat ' + c.dose,
     noteWhy: 'Ziua de azi nu a ieșit ca planul. Merită un rând despre de ce, cât mai ții minte.',
     countHint: c => c.n === 1 ? 'Ai numărat 1 pe parcurs' : 'Ai numărat ' + c.n + ' pe parcurs',
+    // Added for the smoked-fewer check; not part of the originally approved copy.
+    countLessTitle: c => 'Doar ' + c.n + ' azi?',
+    countLessBody: c => 'Ești sigur că ai fumat doar ' + c.n + ', nu ' + c.dose + '?',
     mathTomorrow: c => 'Mâine, limitat la ' + c.start,
     accept: c => c.next === 0 ? 'Aceasta a fost ultima' : 'Pune ' + c.next + ' pentru mâine',
 
