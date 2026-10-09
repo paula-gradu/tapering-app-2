@@ -6,7 +6,7 @@ function memory(initial) {
   return { getItem: k => m.has(k) ? m.get(k) : null, setItem: (k, v) => m.set(k, String(v)), removeItem: k => m.delete(k), m };
 }
 
-test('a record saved by the first build loads unchanged', () => {
+test('a saved record loads unchanged', () => {
   const old = {
     lang: 'ro', start: 20, ceiling: 20, nLow: 18, nHigh: 22, without: 8, tolerable: 4, name: 'Tata',
     agreed: true, setupDone: true, holdingDay: 0, outbox: [], syncedCount: 0, savedAt: '20:00',

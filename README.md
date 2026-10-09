@@ -62,10 +62,10 @@ The number going up after a hard day is the protocol, not a bug.
 
 ## Saved data
 
-`localStorage` key `step.nicotine.v2`, the same key and shape as the first
-build. Both builds are on `paula-gradu.github.io`, so a phone that used the
-first one carries its history straight over. If the shape changes, bump the
-key and migrate in `js/store.js`.
+`localStorage` key `tapering-app-2.v1`. The first build is on the same origin
+(`paula-gradu.github.io`) but saves under `step.nicotine.v2`, so the two apps
+are independent: neither reads or changes the other's data. If the shape
+changes, bump the key and migrate in `js/store.js`.
 
 ## Cloud sync (not switched on)
 

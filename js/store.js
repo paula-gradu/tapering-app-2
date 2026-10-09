@@ -1,11 +1,11 @@
 // Everything that survives a reload, kept in localStorage.
 //
-// The key and shape are the same as the first build's, which lives on the
-// same origin (paula-gradu.github.io), so a phone that used it carries its
-// history straight over. If the shape ever changes, bump the key and add a
-// step to `migrate` that reads the old one.
+// The first build (paula-gradu.github.io/tapering-app/) shares this origin
+// and saves under 'step.nicotine.v2'. This build uses its own key, so the two
+// never read or change each other's data. If the shape here ever changes,
+// bump the version in the key and add a step to `migrate` that reads the old one.
 
-export const STORE_KEY = 'step.nicotine.v2';
+export const STORE_KEY = 'tapering-app-2.v1';
 
 const PERSISTED = [
   'lang', 'start', 'ceiling', 'nLow', 'nHigh', 'without', 'tolerable', 'name',
