@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- a cigarette with a wisp of smoke, in the app's palette -->
+  <path d="M26.5 8c-2-1.8 1.8-3.2 0-5.2s1.4-2.2.4-2.6" fill="none" stroke="#82796a" stroke-width="1.8" stroke-linecap="round"/>
+  <g transform="translate(0 3.5) rotate(-30 16 16)">
+    <rect x="1" y="11.5" width="9" height="9" rx="2" fill="#d67f48" stroke="#643312" stroke-width="1.6"/>
+    <rect x="10" y="11.5" width="16" height="9" fill="#f9f4ed" stroke="#643312" stroke-width="1.6"/>
+    <rect x="26" y="11.5" width="5" height="9" rx="2" fill="#f6a06b" stroke="#643312" stroke-width="1.6"/>
+  </g>
+</svg>
