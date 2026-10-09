@@ -19,9 +19,7 @@ export function today(v) {
 
       ${v.holding ? holdingCard(v) : doseCard(v)}
 
-      ${v.smoked > v.day.dose && !ui.overDismissed && !ui.checkIn && overCard(v)}
-      ${ui.checkIn && !ui.countConfirmed && countCard(v)}
-      ${ui.checkIn && ui.countConfirmed && cravingCard(v)}
+      ${ui.checkIn && (ui.countConfirmed || v.smoked === v.day.dose ? cravingCard(v) : countCard(v))}
 
       ${!ui.checkIn && !v.holding && html`
         <button type="button" class="evening-prompt" data-action="openCheckIn">
@@ -107,59 +105,28 @@ function holdingCard(v) {
     </div>`;
 }
 
-function overCard(v) {
-  const { str, T, ctx } = v;
-  return html`
-    <div class="card card--alert card--flat card--snug g12 rise-in" data-key="over">
-      <span class="card-title card-title--sm">${str.overTitle}</span>
-      <span class="body-sm">${T('overBody', ctx)}</span>
-      <div class="stack g9">
-        <button type="button" class="btn btn--primary" data-action="openFloorFromOver">${str.overYes}</button>
-        <button type="button" class="btn btn--outline" data-action="dismissOver">${T('overNo', ctx)}</button>
-      </div>
-    </div>`;
-}
-
-// Only shown when the tally differs from the day's number. Fewer than the
-// number is just a quick check; more gets the stepper to correct the count.
+// Shown in the evening when the tally is not the day's number, more or
+// fewer. Just a check: he corrects the tally itself with the buttons above.
 function countCard(v) {
-  const { str, T, day, taken, smoked } = v;
-  if (smoked < day.dose) {
-    return html`
-      <div class="card card--alert g16" data-key="count-less">
-        <div class="stack g5">
-          <span class="card-title">${T('countLessTitle', { n: taken })}</span>
-          <span class="body-sm c-muted">${T('countLessBody', { n: taken, dose: day.dose })}</span>
-        </div>
-        <button type="button" class="btn btn--primary btn--md" data-action="confirmCount">${T('countConfirm', { n: taken })}</button>
-        <button type="button" class="btn btn--outline" data-action="confirmPrescribed">${T('countConfirmAlt', { dose: day.dose })}</button>
-      </div>`;
-  }
+  const { T, day, smoked } = v;
+  const kind = smoked < day.dose ? 'Less' : 'More';
   return html`
-    <div class="card card--alert g16" data-key="count">
+    <div class="card card--alert g16" data-key="count-check">
       <div class="stack g5">
-        <span class="card-title">${str.countTitle}</span>
-        <span class="body-sm c-muted">${T('countBody', { n: taken, dose: day.dose })}</span>
+        <span class="card-title">${T('count' + kind + 'Title', { n: smoked })}</span>
+        <span class="body-sm c-muted">${T('count' + kind + 'Body', { n: smoked, dose: day.dose })}</span>
       </div>
-      <div class="count">
-        <button type="button" class="stepper" data-action="countDown" aria-label="−1">−</button>
-        <span class="count__value">${taken}</span>
-        <button type="button" class="stepper" data-action="countUp" aria-label="+1">+</button>
-        <span class="count__hint">${T('countHint', { n: smoked })}</span>
-      </div>
-      <button type="button" class="btn btn--primary btn--md" data-action="confirmCount">${T('countConfirm', { n: taken })}</button>
-      ${taken !== day.dose && html`
-        <button type="button" class="btn btn--outline" data-action="confirmPrescribed">${T('countConfirmAlt', { dose: day.dose })}</button>`}
+      <button type="button" class="btn btn--primary btn--md" data-action="confirmCount">${T('countConfirm', { n: smoked })}</button>
+      <button type="button" class="btn btn--outline" data-action="confirmPrescribed">${T('countConfirmAlt', { dose: day.dose })}</button>
     </div>`;
 }
 
 function cravingCard(v) {
-  const { str, T, ctx, ui, holding, day, taken, floorNow, smokedLess } = v;
+  const { str, T, ctx, ui, holding, floorNow, offNumber } = v;
   const over = ui.draft > floorNow;
-  // an unusual day: he smoked more than the number, or the craving came in
-  // over the level he can live with. Smoking fewer is not unusual, and
-  // saying "no, I smoked the number" is ordinary.
-  const unusual = !smokedLess && (taken > day.dose || over);
+  // worth a note: an ordinary-count day whose craving came in over the level
+  // he can live with. A confirmed off-number day asks nothing extra.
+  const unusual = !offNumber && over;
   return html`
     <div class="card g18" data-key="craving">
       <div class="stack g5">

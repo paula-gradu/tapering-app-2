@@ -17,12 +17,12 @@ export function derive(state) {
 
   // y_min for today: the baseline, or the raised value a hard day earned
   const floorNow = ui.raisedFloor !== null && ui.raisedFloor > data.tolerable ? ui.raisedFloor : data.tolerable;
-  // Eq. 3.1: craving responds to the dose actually TAKEN. countDraft is his
-  // confirmation of the tally, so a forgotten tap cannot skew the step.
-  const taken = Number.isFinite(ui.countDraft) ? ui.countDraft : smoked;
-  // He confirmed fewer than the day's number: the evening stays one slider,
-  // with no note and no hard-day questions.
-  const smokedLess = ui.countConfirmed && taken < day.dose;
+  // Eq. 3.1: craving responds to the dose actually TAKEN, which is the tally
+  // (he confirms it in the evening, and corrects it with the buttons above).
+  const taken = smoked;
+  // He confirmed a count other than the day's number, more or fewer: the
+  // evening stays one slider, with no note and no hard-day questions.
+  const offNumber = ui.countConfirmed && taken !== day.dose;
   const calc = nextDose({ taken, prescribed: day.dose, craving: ui.draft, floor: floorNow, setup: data });
 
   // During setup the explanations preview the answers being given. On a first
@@ -52,5 +52,5 @@ export function derive(state) {
     perPoint: Math.round(k.kPlus * 10) / 10
   };
 
-  return { data, ui, str, T, day, smoked, answered, holding, floorNow, taken, smokedLess, calc, pctDown, avoided, ctx, previewCtx };
+  return { data, ui, str, T, day, smoked, answered, holding, floorNow, taken, offNumber, calc, pctDown, avoided, ctx, previewCtx };
 }

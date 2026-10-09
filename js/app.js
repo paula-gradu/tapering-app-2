@@ -25,16 +25,13 @@ const state = {
     storageOk: storageWorks(),
     // evening question
     checkIn: false,
-    countDraft: null,
     countConfirmed: false,
     draft: data.tolerable,
     note: '',
-    overDismissed: false,
     // a hard day's floor: null until he raises it, for today only
     raisedFloor: null,
     floorDraft: data.tolerable,
     sheet: null, // 'hardDay' | 'baseline' | 'result'
-    fromOverCard: false, // hard-day sheet opened from the over-the-number card
     numbersOpen: false,
     previewOpen: false,
     resetArmed: false,
@@ -82,12 +79,9 @@ function editToday(s, fields) {
   s.data.days = days;
 }
 
-// After a sheet closes: on to tomorrow's number, unless the sheet was opened
-// from the over-the-number card during the day.
+// After a hard-day sheet closes: on to tomorrow's number.
 function closeSheet(s) {
-  s.ui.sheet = s.ui.fromOverCard ? null : 'result';
-  s.ui.fromOverCard = false;
-  s.ui.overDismissed = true;
+  s.ui.sheet = 'result';
 }
 
 // ── actions ──────────────────────────────────────────────────
@@ -95,54 +89,33 @@ function closeSheet(s) {
 const actions = {
   setScreen: (s, id) => { s.ui.screen = id; },
 
-  addSmoke: s => {
-    const smoked = (today(s).smoked || 0) + 1;
-    editToday(s, { smoked });
-    // every cigarette past the number asks again
-    if (smoked > today(s).dose) s.ui.overDismissed = false;
-  },
+  // Going past the number asks nothing during the day; the evening checks it.
+  addSmoke: s => editToday(s, { smoked: (today(s).smoked || 0) + 1 }),
   undoSmoke: s => editToday(s, { smoked: Math.max(0, (today(s).smoked || 0) - 1) }),
-
-  openFloorFromOver: s => {
-    s.ui.sheet = 'hardDay';
-    s.ui.fromOverCard = true;
-    s.ui.floorDraft = Math.max(s.ui.raisedFloor || 0, s.data.tolerable);
-  },
-  dismissOver: s => { s.ui.overDismissed = true; },
 
   openCheckIn: s => {
     const day = today(s);
     const tally = day.smoked || 0;
     s.ui.checkIn = true;
-    s.ui.overDismissed = true;
-    s.ui.countDraft = tally;
     // an ordinary day skips straight to the one question
     s.ui.countConfirmed = tally === day.dose;
     s.ui.draft = s.data.tolerable;
   },
-  countDown: s => { s.ui.countDraft = Math.max(0, s.ui.countDraft - 1); },
-  countUp: s => { s.ui.countDraft += 1; },
-  confirmCount: s => {
-    editToday(s, { smoked: s.ui.countDraft });
-    s.ui.countConfirmed = true;
-  },
-  // the forgot-to-tap case: he smoked exactly the day's number after all
+  confirmCount: s => { s.ui.countConfirmed = true; },
+  // the mis-tap case: he smoked exactly the day's number after all
   confirmPrescribed: s => {
-    const dose = today(s).dose;
-    editToday(s, { smoked: dose });
-    s.ui.countDraft = dose;
+    editToday(s, { smoked: today(s).dose });
     s.ui.countConfirmed = true;
   },
 
   submitCraving: s => {
     // during the holding fortnight there is nothing to set: record and move on
     if (s.data.holdingDay > 0) return commit(s);
-    // smoked fewer than the number: straight to tomorrow, no extra questions
-    if (derive(s).smokedLess) {
+    // smoked other than the number: straight to tomorrow, no extra questions
+    if (derive(s).offNumber) {
       s.ui.sheet = 'result';
     } else if (s.ui.draft > s.data.tolerable && s.ui.raisedFloor === null) {
       s.ui.sheet = 'hardDay';
-      s.ui.fromOverCard = false;
       s.ui.floorDraft = Math.min(10, s.ui.draft);
     } else {
       s.ui.sheet = 'result';
@@ -265,7 +238,7 @@ function commit(s) {
     smoked: v.taken,
     floor: v.floorNow,
     raised: v.floorNow > s.data.tolerable,
-    note: !v.smokedLess && (v.taken > day.dose || s.ui.draft > v.floorNow) ? s.ui.note : ''
+    note: !v.offNumber && s.ui.draft > v.floorNow ? s.ui.note : ''
   });
   s.data.days = s.data.days.slice(0, -1).concat([done, newDay(day.n + 1, next)]);
   s.data.outbox = s.data.outbox.concat([{
@@ -281,8 +254,8 @@ function commit(s) {
 
 function resetEvening(s) {
   Object.assign(s.ui, {
-    checkIn: false, countDraft: null, countConfirmed: false, sheet: null, fromOverCard: false,
-    numbersOpen: false, overDismissed: false, note: '',
+    checkIn: false, countConfirmed: false, sheet: null,
+    numbersOpen: false, note: '',
     draft: s.data.tolerable, raisedFloor: null, floorDraft: s.data.tolerable
   });
 }
