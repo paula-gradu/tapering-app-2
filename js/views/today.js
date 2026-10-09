@@ -122,8 +122,8 @@ function countCard(v) {
 }
 
 function cravingCard(v) {
-  const { str, T, ctx, ui, holding, floorNow, offNumber } = v;
-  const over = ui.draft > floorNow;
+  const { str, T, ctx, ui, holding, floor, offNumber } = v;
+  const over = ui.draft > floor;
   // worth a note: an ordinary-count day whose craving came in over the level
   // he can live with. A confirmed off-number day asks nothing extra.
   const unusual = !offNumber && over;
@@ -138,7 +138,7 @@ function cravingCard(v) {
         <span class="craving-readout__word">${T('cravingWord', ui.draft)}</span>
       </div>
       <div class="stack g10">
-        ${slider({ name: 'craving', value: ui.draft, mark: floorNow, tone: over ? 'craving-over' : 'craving', size: 'tall' })}
+        ${slider({ name: 'craving', value: ui.draft, mark: floor, tone: over ? 'craving-over' : 'craving', size: 'tall' })}
         <div class="row-between scale"><span>${str.scale0}</span><span>${str.scale10}</span></div>
         <span class="tolerable-note ${over ? 'is-over' : ''}">${T('tolerableNote', ctx)}</span>
       </div>

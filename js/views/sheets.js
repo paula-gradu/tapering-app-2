@@ -1,53 +1,16 @@
-// The sheets that slide up during the evening question: a hard day's floor,
-// whether that floor is the new normal, and tomorrow's number.
+// The sheet that slides up at the end of the evening: tomorrow's number.
 
 import { html } from '../dom.js';
-import { slider, sheet, chevron } from './parts.js';
-
-export function hardDaySheet(v) {
-  const { str, T, ctx, ui, data } = v;
-  return sheet('hard-day', html`
-    <div class="stack g8">
-      <span class="kicker c-clay">${str.hardDayKicker}</span>
-      <span class="sheet-title">${str.todayOnlyTitle}</span>
-      <span class="body">${T('todayOnlyBody', ctx)}</span>
-    </div>
-    <div class="card card--flat card--tight g14">
-      <div class="readout">
-        <span class="readout__value readout__value--sm">${ui.floorDraft}</span>
-        <span class="readout__unit">${str.justToday}</span>
-      </div>
-      ${slider({ name: 'floorDraft', value: ui.floorDraft, min: 1, mark: data.tolerable, tone: 'clay' })}
-      <span class="small c-muted">${T('dayFloorNote', ctx)}</span>
-    </div>
-    <div class="stack g10">
-      <button type="button" class="btn btn--primary btn--md" data-action="confirmTodayOnly">${str.todayOnlyConfirm}</button>
-      <button type="button" class="btn btn--outline btn--sm" data-action="skipTodayOnly">${T('todayOnlySkip', ctx)}</button>
-    </div>`);
-}
-
-export function baselineSheet(v) {
-  const { str, T, ctx } = v;
-  return sheet('baseline', html`
-    <div class="stack g8">
-      <span class="kicker c-sage">${str.andGenerally}</span>
-      <span class="sheet-title">${str.baselineTitle}</span>
-      <span class="body">${T('baselineBody', ctx)}</span>
-    </div>
-    <div class="stack g10">
-      <button type="button" class="btn btn--primary btn--md" data-action="raiseBaseline">${T('baselineYes', ctx)}</button>
-      <button type="button" class="btn btn--outline btn--sm" data-action="keepBaseline">${str.baselineNo}</button>
-    </div>`);
-}
+import { sheet, chevron } from './parts.js';
 
 export function resultSheet(v) {
-  const { str, T, ctx, ui, data, calc, taken, floorNow, holding } = v;
+  const { str, T, ctx, ui, calc, taken, floor, holding } = v;
   // Going up is only the protocol's doing when the craving was over the floor;
   // a rise that comes from the daily step limit is explained by capBody.
   const isUp = calc.next > taken && calc.err < 0;
   const working = [
     [str.mathCraving, ui.draft, calc.err < 0 ? 'c-clay' : 'c-sage'],
-    [str.mathTolerable, floorNow],
+    [str.mathTolerable, floor],
     [calc.err >= 0 ? str.mathRoom : str.mathOver, Math.abs(calc.err)],
     [str.mathPerPoint, Math.round(calc.K * 100) / 100],
     [str.mathTaken, taken],

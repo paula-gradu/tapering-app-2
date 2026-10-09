@@ -28,10 +28,7 @@ const state = {
     countConfirmed: false,
     draft: data.tolerable,
     note: '',
-    // a hard day's floor: null until he raises it, for today only
-    raisedFloor: null,
-    floorDraft: data.tolerable,
-    sheet: null, // 'hardDay' | 'baseline' | 'result'
+    sheet: null, // 'result' when tomorrow's number is showing
     numbersOpen: false,
     previewOpen: false,
     resetArmed: false,
@@ -79,11 +76,6 @@ function editToday(s, fields) {
   s.data.days = days;
 }
 
-// After a hard-day sheet closes: on to tomorrow's number.
-function closeSheet(s) {
-  s.ui.sheet = 'result';
-}
-
 // ── actions ──────────────────────────────────────────────────
 
 const actions = {
@@ -111,36 +103,8 @@ const actions = {
   submitCraving: s => {
     // during the holding fortnight there is nothing to set: record and move on
     if (s.data.holdingDay > 0) return commit(s);
-    // smoked other than the number: straight to tomorrow, no extra questions
-    if (derive(s).offNumber) {
-      s.ui.sheet = 'result';
-    } else if (s.ui.draft > s.data.tolerable && s.ui.raisedFloor === null) {
-      s.ui.sheet = 'hardDay';
-      s.ui.floorDraft = Math.min(10, s.ui.draft);
-    } else {
-      s.ui.sheet = 'result';
-    }
+    s.ui.sheet = 'result';
   },
-
-  confirmTodayOnly: s => {
-    if (s.ui.floorDraft > s.data.tolerable) {
-      s.ui.raisedFloor = s.ui.floorDraft;
-      s.ui.sheet = 'baseline';
-    } else {
-      s.ui.raisedFloor = null;
-      closeSheet(s);
-    }
-  },
-  skipTodayOnly: s => {
-    s.ui.raisedFloor = null;
-    closeSheet(s);
-  },
-  raiseBaseline: s => {
-    s.data.tolerable = s.ui.raisedFloor;
-    s.ui.raisedFloor = null;
-    closeSheet(s);
-  },
-  keepBaseline: s => closeSheet(s),
 
   toggleNumbers: s => { s.ui.numbersOpen = !s.ui.numbersOpen; },
   commit: s => commit(s),
@@ -236,9 +200,10 @@ function commit(s) {
   const done = Object.assign({}, day, {
     craving: s.ui.draft,
     smoked: v.taken,
-    floor: v.floorNow,
-    raised: v.floorNow > s.data.tolerable,
-    note: !v.offNumber && s.ui.draft > v.floorNow ? s.ui.note : ''
+    floor: v.floor,
+    // the record keeps this field; days are no longer raised, but older ones may be
+    raised: false,
+    note: !v.offNumber && s.ui.draft > v.floor ? s.ui.note : ''
   });
   s.data.days = s.data.days.slice(0, -1).concat([done, newDay(day.n + 1, next)]);
   s.data.outbox = s.data.outbox.concat([{
@@ -256,7 +221,7 @@ function resetEvening(s) {
   Object.assign(s.ui, {
     checkIn: false, countConfirmed: false, sheet: null,
     numbersOpen: false, note: '',
-    draft: s.data.tolerable, raisedFloor: null, floorDraft: s.data.tolerable
+    draft: s.data.tolerable
   });
 }
 
@@ -346,7 +311,6 @@ function syncView() {
 const SLIDERS = {
   craving: { min: 0, max: () => 10, get: s => s.ui.draft, set: (s, v) => { s.ui.draft = v; } },
   tolerable: { min: 1, max: () => 10, get: s => s.data.tolerable, set: (s, v) => { s.data.tolerable = v; } },
-  floorDraft: { min: 1, max: () => 10, get: s => s.ui.floorDraft, set: (s, v) => { s.ui.floorDraft = v; } },
   without: { min: 1, max: () => 10, get: s => s.ui.onboarding.draft.without, set: (s, v) => { s.ui.onboarding.draft.without = v; } },
   obTolerable: { min: 1, max: () => 10, get: s => s.ui.onboarding.draft.tolerable, set: (s, v) => { s.ui.onboarding.draft.tolerable = v; } },
   nLow: {

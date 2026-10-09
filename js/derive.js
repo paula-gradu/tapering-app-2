@@ -15,15 +15,15 @@ export function derive(state) {
   const answered = data.days.filter(d => d.craving !== null);
   const holding = data.holdingDay > 0;
 
-  // y_min for today: the baseline, or the raised value a hard day earned
-  const floorNow = ui.raisedFloor !== null && ui.raisedFloor > data.tolerable ? ui.raisedFloor : data.tolerable;
+  // y_min: the level he says he can live with
+  const floor = data.tolerable;
   // Eq. 3.1: craving responds to the dose actually TAKEN, which is the tally
   // (he confirms it in the evening, and corrects it with the buttons above).
   const taken = smoked;
   // He confirmed a count other than the day's number, more or fewer: the
   // evening stays one slider, with no note and no hard-day questions.
   const offNumber = ui.countConfirmed && taken !== day.dose;
-  const calc = nextDose({ taken, prescribed: day.dose, craving: ui.draft, floor: floorNow, setup: data });
+  const calc = nextDose({ taken, prescribed: day.dose, craving: ui.draft, floor, setup: data });
 
   // During setup the explanations preview the answers being given. On a first
   // setup those answers also set the ceiling; afterwards the ceiling is fixed.
@@ -39,10 +39,9 @@ export function derive(state) {
   const ctx = {
     day: day.n, dose: day.dose, start: data.ceiling, smoked, avoided, pctDown,
     tolerable: data.tolerable, holdingDay: data.holdingDay, name: data.name, agreed: data.agreed,
-    craving: ui.draft, floor: floorNow, over: ui.draft > floorNow,
+    craving: ui.draft, floor, over: ui.draft > floor,
     taken, err: calc.err, next: calc.next, raw: calc.raw, step: calc.step,
     atCeiling: calc.next >= data.ceiling,
-    dayFloor: ui.raisedFloor !== null ? ui.raisedFloor : ui.floorDraft,
     rows: data.days.length, savedAt: data.savedAt || '—'
   };
   const previewCtx = {
@@ -52,5 +51,5 @@ export function derive(state) {
     perPoint: Math.round(k.kPlus * 10) / 10
   };
 
-  return { data, ui, str, T, day, smoked, answered, holding, floorNow, taken, offNumber, calc, pctDown, avoided, ctx, previewCtx };
+  return { data, ui, str, T, day, smoked, answered, holding, floor, taken, offNumber, calc, pctDown, avoided, ctx, previewCtx };
 }

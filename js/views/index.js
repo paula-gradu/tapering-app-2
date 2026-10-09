@@ -4,7 +4,7 @@ import { html } from '../dom.js';
 import { today } from './today.js';
 import { progress } from './progress.js';
 import { settings } from './settings.js';
-import { hardDaySheet, baselineSheet, resultSheet } from './sheets.js';
+import { resultSheet } from './sheets.js';
 import { setup } from './setup.js';
 
 const TABS = [
@@ -12,8 +12,6 @@ const TABS = [
   { id: 'trend', label: 'tabProgress', icon: 'M3 3v18h18M7 15l4-5 3 3 5-7' },
   { id: 'plan', label: 'tabSettings', icon: 'M4 6h16M4 12h16M4 18h16' }
 ];
-
-const SHEETS = { hardDay: hardDaySheet, baseline: baselineSheet, result: resultSheet };
 
 export function view(v, sync) {
   const { str, ui } = v;
@@ -28,6 +26,6 @@ export function view(v, sync) {
           <span>${str[tab.label]}</span>
         </button>`)}
     </nav>
-    ${ui.sheet && SHEETS[ui.sheet](v)}
+    ${ui.sheet === 'result' && resultSheet(v)}
     ${ui.onboarding && setup(v)}`;
 }

@@ -55,7 +55,8 @@ next = clamp(today − step, today + step, raw)
 - `ceiling` is the count from first setup; never exceeded, never lowered by a restart.
 - `step` is a fifth of the ceiling (at least 1): the number never moves further
   than that from one day to the next, in either direction.
-- `y_min` is normally the tolerable level; a hard day can raise it for that day only.
+- `y_min` is the tolerable level from Settings. (The first build let a hard day
+  raise it for that day only; such days keep `raised: true` in their record.)
 
 The number going up after a hard day is the protocol, not a bug.
 

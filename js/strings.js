@@ -148,18 +148,6 @@ export const STRINGS = {
     capBody: c => 'You said ' + c.craving + '. Worked out from what you smoked today (' + c.taken + '), tomorrow would be ' + c.raw + ' — but the number never moves by more than ' + c.step + ' from one day to the next, so tomorrow is ' + c.next + '.',
     stepNote: c => 'From one day to the next it moves by ' + c.step + ' at most.',
 
-    hardDayKicker: 'A hard day',
-    todayOnlyTitle: 'Did today need more room?',
-    todayOnlyBody: c => 'You normally get through on a ' + c.tolerable + '. Some days that is not the day you are having. If today asked more of you, say what you could actually live with — just for today.',
-    justToday: 'just for today',
-    dayFloorNote: c => 'The mark shows your usual ' + c.tolerable + '. Tomorrow\u2019s number is worked out against whatever you set here.',
-    todayOnlyConfirm: 'That\u2019s what today needed',
-    todayOnlySkip: c => 'No, ' + c.tolerable + ' was right',
-    andGenerally: 'And generally?',
-    baselineTitle: 'Was that just today, or is it every day now?',
-    baselineBody: c => 'You said today needed ' + c.dayFloor + ' rather than your usual ' + c.tolerable + '. If that is how most days feel at the moment, it makes sense to move the general setting too. If today was a one-off, leave it — the taper carries on as before.',
-    baselineYes: c => 'Make ' + c.dayFloor + ' my usual',
-    baselineNo: 'Just today — keep it as it was',
 
     ob: [
       { title: 'One number a day', body: 'Every evening it asks one question: how bad was the craving? Every morning it gives you a number for the day. That is the whole app.' },
@@ -168,7 +156,7 @@ export const STRINGS = {
       { title: 'How many do you smoke on a normal day?', body: 'Start where you actually are. This also becomes the most the app will ever suggest.' },
       { title: 'How many cigarettes a day fully satisfy your cravings?', body: 'The number where you are not wanting another one. A range is fine — nobody knows this exactly.' },
       { title: 'And with none at all, how bad would it get?', body: 'Ten is all-day, can\u2019t-think-about-anything-else.' },
-      { title: 'What craving could you live with?', body: 'Not comfortable — liveable, for a day. You can change this whenever you like, and on a hard day the app will ask whether that day needed more.' },
+      { title: 'What craving could you live with?', body: 'Not comfortable — liveable, for a day. You can change this whenever you like.' },
       { title: 'One thing to be clear about', body: 'Please read this before you start.' },
       { title: 'That\u2019s everything', body: 'No plan, no schedule, no end date to fall behind on. Just this evening\u2019s question.' }
     ],
@@ -327,18 +315,6 @@ export const STRINGS = {
     capBody: c => 'Ai spus ' + c.craving + '. Calculat din cât ai fumat azi (' + c.taken + '), mâine ar fi ' + c.raw + ' — dar numărul nu se schimbă cu mai mult de ' + c.step + ' de la o zi la alta, deci mâine sunt ' + c.next + '.',
     stepNote: c => 'De la o zi la alta se schimbă cu cel mult ' + c.step + '.',
 
-    hardDayKicker: 'O zi grea',
-    todayOnlyTitle: 'A avut ziua de azi nevoie de mai mult loc?',
-    todayOnlyBody: c => 'De obicei te descurci cu un ' + c.tolerable + '. Unele zile nu sunt însă ziua pe care o ai. Dacă azi ți-a cerut mai mult, spune cât puteai suporta de fapt — doar pentru azi.',
-    justToday: 'doar pentru azi',
-    dayFloorNote: c => 'Semnul arată ' + c.tolerable + ' al tău obișnuit. Numărul de mâine se calculează față de ce pui aici.',
-    todayOnlyConfirm: 'Atât a cerut ziua de azi',
-    todayOnlySkip: c => 'Nu, ' + c.tolerable + ' a fost corect',
-    andGenerally: 'Și în general?',
-    baselineTitle: 'A fost doar azi, sau așa sunt toate zilele acum?',
-    baselineBody: c => 'Ai spus că azi a avut nevoie de ' + c.dayFloor + ' în loc de ' + c.tolerable + '. Dacă așa se simt majoritatea zilelor acum, are sens să schimbi și setarea generală. Dacă a fost o excepție, las-o — procesul continuă ca înainte.',
-    baselineYes: c => 'Fă din ' + c.dayFloor + ' obișnuitul meu',
-    baselineNo: 'Doar azi — lasă cum era',
 
     ob: [
       { title: 'Un număr pe zi', body: 'În fiecare seară o singură întrebare: cât de mare a fost disconfortul? În fiecare dimineață un număr pentru ziua aceea. Asta este toată aplicația.' },
@@ -347,7 +323,7 @@ export const STRINGS = {
       { title: 'Câte fumezi într-o zi normală?', body: 'Pornește de unde ești de fapt. Acesta devine și maximul pe care aplicația îl va sugera vreodată.' },
       { title: 'Câte țigări pe zi îți înlătură complet disconfortul?', body: 'Numărul la care nu mai vrei încă una. Un interval este suficient — nimeni nu știe exact.' },
       { title: 'Și fără niciuna, cât de rău ar fi?', body: 'Zece înseamnă toată ziua, fără să te poți gândi la altceva.' },
-      { title: 'Cu cât disconfort ai putea trăi?', body: 'Nu confortabil — suportabil, pentru o zi. Îl poți schimba oricând, iar într-o zi grea aplicația te va întreba dacă acea zi a cerut mai mult.' },
+      { title: 'Cu cât disconfort ai putea trăi?', body: 'Nu confortabil — suportabil, pentru o zi. Îl poți schimba oricând.' },
       { title: 'Un lucru care trebuie spus clar', body: 'Te rog citește înainte de a începe.' },
       { title: 'Asta e tot', body: 'Fără plan, fără program, fără o dată limită față de care să rămâi în urmă. Doar întrebarea din această seară.' }
     ],
