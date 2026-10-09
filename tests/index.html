@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Step — tests</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 24px; }
+    .ok { color: #56633f; } .fail { color: #8c491a; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Step — tests</h1>
+  <p id="summary">Running…</p>
+  <ul id="results"></ul>
+  <script type="module">
+    import { run } from './harness.js';
+    import './model.test.js';
+    import './strings.test.js';
+    import './store.test.js';
+
+    const results = run();
+    const failed = results.filter(r => !r.ok);
+    document.getElementById('summary').textContent =
+      failed.length ? failed.length + ' of ' + results.length + ' failed' : 'All ' + results.length + ' passed';
+    document.getElementById('results').innerHTML = results.map(r =>
+      '<li class="' + (r.ok ? 'ok' : 'fail') + '">' + (r.ok ? '✓ ' : '✗ ') + r.name + (r.ok ? '' : ' — ' + r.error) + '</li>'
+    ).join('');
+    window.testResults = results;
+  </script>
+</body>
+</html>
